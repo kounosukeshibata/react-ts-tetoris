@@ -4,3 +4,15 @@
   padding: 2rem;
   text-align: center;
 }
+
+.Tile {
+  display: inline-block;
+  margin: 1px;
+  border: solid 1px #555;
+  width: 10px;
+  height: 10px;
+}
+
+.TileLine {
+  line-height: 0;
+}

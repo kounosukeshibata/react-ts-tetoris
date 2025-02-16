@@ -1,15 +1,14 @@
 import "./App.css";
-
+import Container from "./components/Container";
 import { useState } from "react";
-
-import reactLogo from "./assets/react.svg";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <div className="App">
-      <h1>Vite + React</h1>
+      <h2>Tetoris-Game</h2>
+      <Container />
     </div>
   );
 }
