@@ -2,8 +2,8 @@ import Board from "./Board";
 
 const Container = () => {
   return (
-    <div>
-      <h3>Container</h3>
+    <div className="container">
+      <h3>Tetoris</h3>
       <Board />
     </div>
   );
