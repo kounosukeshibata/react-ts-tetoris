@@ -37,11 +37,11 @@ function Board() {
 
   // キーボード操作のたびにnextStepを実行する副作用
   useEffect(() => {
-    const intervalId = setInterval(nextStep, 1000);
+    // const intervalId = setInterval(nextStep, 1000);
     window.addEventListener("keydown", nextStep);
 
     return () => {
-      clearInterval(intervalId);
+      // clearInterval(intervalId);
       window.removeEventListener("keydown", nextStep);
     };
   }, [nextStep]);
