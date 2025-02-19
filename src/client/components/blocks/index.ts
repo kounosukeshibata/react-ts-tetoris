@@ -145,3 +145,10 @@ export const getNextBlock = (
     y: fallingBlock.y + 1,
   };
 };
+
+export const turnOnce = (
+  x: number,
+  y: number,
+  centerX: number,
+  centerY: number,
+) => [centerX - (y - centerY), centerY + (x - centerX)];
