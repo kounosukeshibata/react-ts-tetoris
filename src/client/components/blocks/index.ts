@@ -61,7 +61,7 @@ export const BLOCK_SHAPES: BlockShapeType = {
       [0, 1],
       [1, 1],
     ],
-    center: [1, 0.5],
+    center: [0.5, 0.5],
   },
   z: {
     tiles: [
@@ -70,7 +70,7 @@ export const BLOCK_SHAPES: BlockShapeType = {
       [1, 1],
       [2, 1],
     ],
-    center: [1, 0.5],
+    center: [0.5, 0.5],
   },
   j: {
     tiles: [
@@ -79,7 +79,7 @@ export const BLOCK_SHAPES: BlockShapeType = {
       [2, 0],
       [2, 1],
     ],
-    center: [1, 0.5],
+    center: [0.5, 0.5],
   },
   l: {
     tiles: [
@@ -88,7 +88,7 @@ export const BLOCK_SHAPES: BlockShapeType = {
       [2, 0],
       [0, 1],
     ],
-    center: [1, 0.5],
+    center: [0.5, 0.5],
   },
   t: {
     tiles: [
@@ -97,7 +97,7 @@ export const BLOCK_SHAPES: BlockShapeType = {
       [2, 0],
       [1, 1],
     ],
-    center: [1, 1.5],
+    center: [0.5, 0.5],
   },
 } as const;
 
@@ -111,6 +111,7 @@ export const COLOR_NAME = {
   t: "block-type-t",
 } as const;
 
+// ある座標について、既にそこに存在しているブロックがあれば返却する
 export const findBlock = (
   blocks: Block[],
   x: number,
@@ -125,6 +126,7 @@ export const findBlock = (
   }
 };
 
+// あるブロックについての構成要素（Tile）の各座標を取得する
 export const getTiles = (block: Block) => {
   const blockShape = BLOCK_SHAPES[block.type];
   return blockShape.tiles.map((tile) =>
@@ -138,10 +140,12 @@ export const getTiles = (block: Block) => {
   );
 };
 
+// ブロックが動いた次のターンのブロックを返却する
 export const getNextBlock = (
   fallingBlock: Block | null,
   boardWidth: number,
   boardHeight: number,
+  blocks: Block[],
 ): Block | null => {
   // 落下中のブロックが存在しない場合は新しいブロックを作成
   if (fallingBlock === null) {
@@ -154,17 +158,29 @@ export const getNextBlock = (
     };
   }
 
-  // if (fallingBlock.y === 0) {
-  //   // TODO: 既存のブロックに接したことを判定
-  //   return null;
-  // }
+  // 最下段に接したことを判定
+  if (
+    Math.max(
+      ...getTiles(fallingBlock).map((item) => item[1] + fallingBlock.y),
+    ) >= 19
+  ) {
+    // すでに最下段にいる場合
+    return null;
+  }
 
-  return {
-    ...fallingBlock,
-    y: fallingBlock.y + 1,
-  };
+  // ブロックを一段下に落とす
+  const nextBlock = { ...fallingBlock, y: fallingBlock.y + 1 };
+  // nextBlockが既存のブロックに接触したかどうかの判定
+  for (const tile of getTiles(nextBlock)) {
+    if (findBlock(blocks, tile[0] + nextBlock.x, tile[1] + nextBlock.y)) {
+      return null;
+    }
+  }
+
+  return nextBlock;
 };
 
+// 回転ロジック
 export const turnOnce = (
   x: number,
   y: number,
@@ -172,6 +188,7 @@ export const turnOnce = (
   centerY: number,
 ): [number, number] => [centerX - (y - centerY), centerY + (x - centerX)];
 
+// 回転ロジックをturnVal回分タイルに適用する
 export const turn = (
   x: number,
   y: number,
@@ -186,10 +203,12 @@ export const turn = (
   return res;
 };
 
+// 左右と回転の移動ロジックをブロックに適用する
 export const moveBlock = (
   block: Block,
   move: MoveType,
   boardWidth: number,
+  blocks: Block[],
 ): Block | null => {
   // move型によってx軸方向の移動後の座標遷移を制御
   const movedBlock = (() => {
@@ -216,7 +235,16 @@ export const moveBlock = (
   const tilesX = getTiles(movedBlock).map(([x]) => x + movedBlock.x);
 
   // 移動先が不正ならnullを返却する.
-  return Math.min(...tilesX) < 0 || Math.max(...tilesX) >= boardWidth
-    ? null
-    : movedBlock;
+  if (Math.min(...tilesX) < 0 || Math.max(...tilesX) >= boardWidth) {
+    return null;
+  }
+
+  // movedBlockが既存のブロックに接触したかどうかの判定
+  for (const tile of getTiles(movedBlock)) {
+    if (findBlock(blocks, tile[0] + movedBlock.x, tile[1] + movedBlock.y)) {
+      return null;
+    }
+  }
+
+  return movedBlock;
 };

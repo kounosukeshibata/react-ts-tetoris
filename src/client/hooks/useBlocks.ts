@@ -6,29 +6,31 @@ import {
   moveBlock,
 } from "../components/blocks";
 
-const DUMMY_BLOCKS: Block[] = [
-  // { x: 0, y: 0, turn: 0, type: "i" },
-  // { x: 1, y: 0, turn: 0, type: "o" },
-  // { x: 3, y: 0, turn: 0, type: "s" },
-  // { x: 6, y: 0, turn: 0, type: "z" },
-  // { x: 1, y: 2, turn: 0, type: "j" },
-  // { x: 4, y: 2, turn: 0, type: "l" },
-  // { x: 7, y: 2, turn: 0, type: "t" },
-];
-
 const useBlocks = (boardWidth: number, boardHeight: number) => {
-  const [blocks] = useState(DUMMY_BLOCKS);
+  const [blocks, setBlocks] = useState<Block[]>([]);
   const [fallingBlock, setFallingBlock] = useState<Block | null>(null);
 
+  // 各ステップの新しいブロックの状態をsetする
   const nextStep = () => {
-    setFallingBlock(getNextBlock(fallingBlock, boardWidth, boardHeight));
+    const movedBlock = getNextBlock(
+      fallingBlock,
+      boardWidth,
+      boardHeight,
+      blocks,
+    );
+    if (movedBlock === null) {
+      setBlocks([...blocks, fallingBlock as Block]);
+    }
+    setFallingBlock(movedBlock);
   };
 
   const move = (m: MoveType) => {
     if (fallingBlock === null) {
       return;
     }
-    setFallingBlock(moveBlock(fallingBlock, m, boardWidth) || fallingBlock);
+    setFallingBlock(
+      moveBlock(fallingBlock, m, boardWidth, blocks) || fallingBlock,
+    );
   };
 
   return {
