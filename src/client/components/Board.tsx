@@ -8,7 +8,7 @@ const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 
 function Board() {
-  const { blocks, fallingBlock, nextStep } = useBlocks(
+  const { blocks, fallingBlock, nextStep, move } = useBlocks(
     BOARD_WIDTH,
     BOARD_HEIGHT,
   );
@@ -35,16 +35,40 @@ function Board() {
     </div>
   ));
 
-  // キーボード操作のたびにnextStepを実行する副作用
+  // キーボード操作のたびにブロック移動を実行する副作用
   useEffect(() => {
     // const intervalId = setInterval(nextStep, 1000);
-    window.addEventListener("keydown", nextStep);
+    // window.addEventListener("keydown", nextStep);
+    const keyEventHandler = (e: KeyboardEvent) => {
+      e.preventDefault();
+      switch (e.key) {
+        case "ArrowLeft":
+        case "h":
+          move("left");
+          break;
+        case "ArrowRight":
+        case "l":
+          move("right");
+          break;
+        case "ArrowUp":
+        case "k":
+          move("turn");
+          break;
+        case " ":
+        case "ArrowDown":
+        case "j":
+          nextStep();
+          break;
+      }
+    };
+    window.addEventListener("keydown", keyEventHandler);
 
     return () => {
       // clearInterval(intervalId);
-      window.removeEventListener("keydown", nextStep);
+      // window.removeEventListener("keydown", nextStep);
+      window.removeEventListener("keydown", keyEventHandler);
     };
-  }, [nextStep]);
+  });
 
   return (
     <div className="Board">

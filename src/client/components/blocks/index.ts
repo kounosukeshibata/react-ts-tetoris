@@ -13,6 +13,7 @@ export const BLOCK_TYPES: Readonly<BlockType[]> = [
 export type Block = {
   x: number;
   y: number;
+  turn: Turn;
   type: BlockType;
 };
 
@@ -29,6 +30,10 @@ export type BlockShapeType = Readonly<{
     center: Readonly<[number, number]>;
   }>;
 }>;
+
+export type MoveType = "left" | "right" | "turn";
+
+export type Turn = 0 | 1 | 2 | 3;
 
 export const BLOCK_SHAPES: BlockShapeType = {
   i: {
@@ -112,12 +117,25 @@ export const findBlock = (
   y: number,
 ): Block | undefined => {
   for (const block of blocks) {
-    for (const shape of BLOCK_SHAPES[block.type].tiles) {
-      if (x === block.x + shape[0] && y === block.y + shape[1]) {
+    for (const tile of getTiles(block)) {
+      if (x === block.x + tile[0] && y === block.y + tile[1]) {
         return block;
       }
     }
   }
+};
+
+export const getTiles = (block: Block) => {
+  const blockShape = BLOCK_SHAPES[block.type];
+  return blockShape.tiles.map((tile) =>
+    turn(
+      tile[0],
+      tile[1],
+      blockShape.center[0],
+      blockShape.center[1],
+      block.turn,
+    ),
+  );
 };
 
 export const getNextBlock = (
@@ -131,6 +149,7 @@ export const getNextBlock = (
     return {
       x: Math.floor(boardWidth / 2 + 0.5 - BLOCK_SHAPES[type].center[0]),
       y: -1,
+      turn: 0,
       type,
     };
   }
@@ -151,4 +170,53 @@ export const turnOnce = (
   y: number,
   centerX: number,
   centerY: number,
-) => [centerX - (y - centerY), centerY + (x - centerX)];
+): [number, number] => [centerX - (y - centerY), centerY + (x - centerX)];
+
+export const turn = (
+  x: number,
+  y: number,
+  centerX: number,
+  centerY: number,
+  turnVal: Turn,
+): [number, number] => {
+  let res: [number, number] = [x, y];
+  for (let i = 0; i < turnVal; i++) {
+    res = turnOnce(res[0], res[1], centerX, centerY);
+  }
+  return res;
+};
+
+export const moveBlock = (
+  block: Block,
+  move: MoveType,
+  boardWidth: number,
+): Block | null => {
+  // move型によってx軸方向の移動後の座標遷移を制御
+  const movedBlock = (() => {
+    switch (move) {
+      case "left":
+        return {
+          ...block,
+          x: block.x - 1,
+        };
+      case "right":
+        return {
+          ...block,
+          x: block.x + 1,
+        };
+      case "turn":
+        return {
+          ...block,
+          turn: ((block.turn + 1) % 4) as Turn,
+        };
+    }
+  })();
+
+  // x軸方向の座標遷移の結果を元に回転ロジックを考慮したTile位置を取得し、
+  const tilesX = getTiles(movedBlock).map(([x]) => x + movedBlock.x);
+
+  // 移動先が不正ならnullを返却する.
+  return Math.min(...tilesX) < 0 || Math.max(...tilesX) >= boardWidth
+    ? null
+    : movedBlock;
+};
