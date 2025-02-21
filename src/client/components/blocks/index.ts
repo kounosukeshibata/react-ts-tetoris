@@ -246,3 +246,23 @@ export const moveBlock = (
 
   return movedBlock;
 };
+
+// 揃った行の行番号を返すロジック
+export const getCompletedRows = (
+  tiles: Tile[],
+  boardWidth: number,
+): number[] => {
+  return Array.from(new Set(tiles.map(({ y }) => y))).filter(
+    (y) => tiles.filter((tile) => tile.y === y).length === boardWidth,
+  );
+};
+
+// 行削除のロジック
+export const deleteRows = (tiles: Tile[], rows: number[]): Tile[] => {
+  return tiles
+    .filter(({ y }) => !rows.includes(y))
+    .map((tile) => ({
+      ...tile,
+      y: tile.y + rows.filter((row) => row > tile.y).length,
+    }));
+};

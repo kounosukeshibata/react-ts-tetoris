@@ -4,6 +4,8 @@ import {
   getNextBlock,
   type MoveType,
   moveBlock,
+  getCompletedRows,
+  deleteRows,
   Tile,
   getTiles,
 } from "../components/blocks";
@@ -20,8 +22,16 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
       boardHeight,
       tiles,
     );
+
+    // あるステップでブロックがまだ動いている状態の制御
     if (movedBlock === null && fallingBlock != null) {
-      setTiles([...tiles, ...getTiles(fallingBlock)]);
+      let nextTiles = [...tiles, ...getTiles(fallingBlock)];
+      // 行が全て揃った場合に行削除を行いtilesステートをsetする
+      const completedRows = getCompletedRows(nextTiles, boardWidth);
+      if (completedRows.length) {
+        nextTiles = deleteRows(nextTiles, completedRows);
+      }
+      setTiles(nextTiles);
     }
     setFallingBlock(movedBlock);
   };
