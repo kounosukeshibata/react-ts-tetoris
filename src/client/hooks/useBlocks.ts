@@ -4,22 +4,24 @@ import {
   getNextBlock,
   type MoveType,
   moveBlock,
+  Tile,
+  getTiles,
 } from "../components/blocks";
 
 const useBlocks = (boardWidth: number, boardHeight: number) => {
-  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [tiles, setTiles] = useState<Tile[]>([]);
   const [fallingBlock, setFallingBlock] = useState<Block | null>(null);
 
-  // 各ステップの新しいブロックの状態をsetする
+  // 各ステップでブロックが動いた直後の新しいブロックの状態をsetする
   const nextStep = () => {
     const movedBlock = getNextBlock(
       fallingBlock,
       boardWidth,
       boardHeight,
-      blocks,
+      tiles,
     );
-    if (movedBlock === null) {
-      setBlocks([...blocks, fallingBlock as Block]);
+    if (movedBlock === null && fallingBlock != null) {
+      setTiles([...tiles, ...getTiles(fallingBlock)]);
     }
     setFallingBlock(movedBlock);
   };
@@ -29,12 +31,12 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
       return;
     }
     setFallingBlock(
-      moveBlock(fallingBlock, m, boardWidth, blocks) || fallingBlock,
+      moveBlock(fallingBlock, m, boardWidth, tiles) || fallingBlock,
     );
   };
 
   return {
-    blocks,
+    tiles,
     fallingBlock,
     nextStep,
     move,

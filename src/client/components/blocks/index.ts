@@ -17,6 +17,12 @@ export type Block = {
   type: BlockType;
 };
 
+export type Tile = {
+  x: number;
+  y: number;
+  type: BlockType; // 表示時の色指定のために保持
+};
+
 export type BlockShapeType = Readonly<{
   [key in BlockType]: Readonly<{
     tiles: Readonly<
@@ -111,73 +117,24 @@ export const COLOR_NAME = {
   t: "block-type-t",
 } as const;
 
-// ある座標について、既にそこに存在しているブロックがあれば返却する
-export const findBlock = (
-  blocks: Block[],
-  x: number,
-  y: number,
-): Block | undefined => {
-  for (const block of blocks) {
-    for (const tile of getTiles(block)) {
-      if (x === block.x + tile[0] && y === block.y + tile[1]) {
-        return block;
-      }
-    }
-  }
-};
-
-// あるブロックについての構成要素（Tile）の各座標を取得する
-export const getTiles = (block: Block) => {
+// あるブロックについての構成要素（Tile）の情報を取得する
+export const getTiles = (block: Block): Tile[] => {
   const blockShape = BLOCK_SHAPES[block.type];
-  return blockShape.tiles.map((tile) =>
-    turn(
-      tile[0],
-      tile[1],
-      blockShape.center[0],
-      blockShape.center[1],
-      block.turn,
-    ),
-  );
-};
-
-// ブロックが動いた次のターンのブロックを返却する
-export const getNextBlock = (
-  fallingBlock: Block | null,
-  boardWidth: number,
-  boardHeight: number,
-  blocks: Block[],
-): Block | null => {
-  // 落下中のブロックが存在しない場合は新しいブロックを作成
-  if (fallingBlock === null) {
-    const type = BLOCK_TYPES[Math.floor(BLOCK_TYPES.length * Math.random())];
-    return {
-      x: Math.floor(boardWidth / 2 + 0.5 - BLOCK_SHAPES[type].center[0]),
-      y: -1,
-      turn: 0,
-      type,
-    };
-  }
-
-  // 最下段に接したことを判定
-  if (
-    Math.max(
-      ...getTiles(fallingBlock).map((item) => item[1] + fallingBlock.y),
-    ) >= 19
-  ) {
-    // すでに最下段にいる場合
-    return null;
-  }
-
-  // ブロックを一段下に落とす
-  const nextBlock = { ...fallingBlock, y: fallingBlock.y + 1 };
-  // nextBlockが既存のブロックに接触したかどうかの判定
-  for (const tile of getTiles(nextBlock)) {
-    if (findBlock(blocks, tile[0] + nextBlock.x, tile[1] + nextBlock.y)) {
-      return null;
-    }
-  }
-
-  return nextBlock;
+  return blockShape.tiles
+    .map((tile) =>
+      turn(
+        tile[0],
+        tile[1],
+        blockShape.center[0],
+        blockShape.center[1],
+        block.turn,
+      ),
+    )
+    .map(([x, y]) => ({
+      x: block.x + x,
+      y: block.y + y,
+      type: block.type,
+    }));
 };
 
 // 回転ロジック
@@ -203,12 +160,50 @@ export const turn = (
   return res;
 };
 
+// 次のステップのブロックを返却する
+export const getNextBlock = (
+  fallingBlock: Block | null,
+  boardWidth: number,
+  boardHeight: number,
+  tiles: Tile[],
+): Block | null => {
+  // 落下中のブロックが存在しない場合は新しいブロックを作成
+  if (fallingBlock === null) {
+    const type = BLOCK_TYPES[Math.floor(BLOCK_TYPES.length * Math.random())];
+    return {
+      x: Math.floor(boardWidth / 2 - 0.5 - BLOCK_SHAPES[type].center[0]),
+      y: -1,
+      turn: 0,
+      type,
+    };
+  }
+
+  // 最下段に接したことを判定
+  if (Math.max(...getTiles(fallingBlock).map((tile) => tile.y)) >= 19) {
+    // すでに最下段にいる場合
+    return null;
+  }
+
+  // ブロックを一段下に落とす
+  const nextBlock = { ...fallingBlock, y: fallingBlock.y + 1 };
+  // nextBlockのタイル位置に既にタイルがある場合は不整地なのでnullを返す
+  for (const tile of getTiles(nextBlock)) {
+    for (const t of tiles) {
+      if (tile.x == t.x && tile.y == t.y) {
+        return null;
+      }
+    }
+  }
+
+  return nextBlock;
+};
+
 // 左右と回転の移動ロジックをブロックに適用する
 export const moveBlock = (
   block: Block,
   move: MoveType,
   boardWidth: number,
-  blocks: Block[],
+  tiles: Tile[],
 ): Block | null => {
   // move型によってx軸方向の移動後の座標遷移を制御
   const movedBlock = (() => {
@@ -231,18 +226,21 @@ export const moveBlock = (
     }
   })();
 
-  // x軸方向の座標遷移の結果を元に回転ロジックを考慮したTile位置を取得し、
-  const tilesX = getTiles(movedBlock).map(([x]) => x + movedBlock.x);
+  // x軸方向の座標遷移の結果を元に回転ロジックを考慮したTile位置を取得
+  const tilesX = getTiles(movedBlock).map(({ x }) => x);
 
   // 移動先が不正ならnullを返却する.
   if (Math.min(...tilesX) < 0 || Math.max(...tilesX) >= boardWidth) {
     return null;
   }
 
-  // movedBlockが既存のブロックに接触したかどうかの判定
+  // movedBlockが既存のタイルに接触したかどうかの判定
+  // movedBlockのタイル位置に既にタイルがある場合は不整地なのでnullを返す
   for (const tile of getTiles(movedBlock)) {
-    if (findBlock(blocks, tile[0] + movedBlock.x, tile[1] + movedBlock.y)) {
-      return null;
+    for (const t of tiles) {
+      if (tile.x == t.x && tile.y == t.y) {
+        return null;
+      }
     }
   }
 
