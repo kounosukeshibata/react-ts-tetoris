@@ -2,7 +2,7 @@ import useBlocks from "../hooks/useBlocks";
 import { COLOR_NAME, findBlock } from "./blocks";
 import Tile from "./Tile";
 import "../App.css";
-import { useEffect } from "react";
+import useKeyHandler from "../hooks/useKeyHandler";
 import useTimer from "../hooks/useTimer";
 
 const BOARD_WIDTH = 10;
@@ -39,40 +39,7 @@ function Board() {
     </div>
   ));
 
-  // キーボード操作のたびにブロック移動を実行する副作用
-  useEffect(() => {
-    // const intervalId = setInterval(nextStep, 1000);
-    // window.addEventListener("keydown", nextStep);
-    const keyEventHandler = (e: KeyboardEvent) => {
-      e.preventDefault();
-      switch (e.key) {
-        case "ArrowLeft":
-        case "h":
-          move("left");
-          break;
-        case "ArrowRight":
-        case "l":
-          move("right");
-          break;
-        case "ArrowUp":
-        case "k":
-          move("turn");
-          break;
-        case " ":
-        case "ArrowDown":
-        case "j":
-          nextStep();
-          break;
-      }
-    };
-    window.addEventListener("keydown", keyEventHandler);
-
-    return () => {
-      // clearInterval(intervalId);
-      // window.removeEventListener("keydown", nextStep);
-      window.removeEventListener("keydown", keyEventHandler);
-    };
-  });
+  useKeyHandler(nextStep, move);
 
   return (
     <div className="Board">
