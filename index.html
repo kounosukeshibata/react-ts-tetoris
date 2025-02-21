@@ -10,5 +10,19 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      export default {
+        methods: {
+          QueryIs: function () {
+            if (this.$route.query.p !== undefined) {
+              this.$router.push("/" + this.$route.query.p);
+            }
+          },
+        },
+        mounted() {
+          this.QueryIs();
+        },
+      };
+    </script>
   </body>
 </html>
