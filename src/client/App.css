@@ -1,12 +1,38 @@
-.App {
+.container {
+  color: white;
   text-align: center;
-  width: 350px;
+  background-color: black;
+  font-size: 40px;
 }
 
-.container {
-  /* padding: 10px 50px 40px 50px; */
-  color: white;
-  background-color: black;
+.title-name {
+  font-size: 40px;
+  padding-top: 50px;
+}
+
+.main-container {
+  width: 100%;
+  padding: 20px;
+  padding-bottom: 200px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.main-container-wrapper {
+  display: flex; /* フレックスボックスを使用 */
+  justify-content: center;
+  align-items: center; /* 上部に揃える */
+  width: 100%;
+}
+
+.ExplanationPanel {
+  border: solid 1px #555;
+  border-radius: 10px;
+
+  .subtitle {
+    font-size: 15px;
+    text-align: center;
+  }
 }
 
 .Tile {
@@ -41,4 +67,141 @@
 
 .TileLine {
   line-height: 0;
+}
+
+/* スマホ向けのスタイル */
+@media (max-width: 600px) {
+  .title-name {
+    font-size: 30px;
+    padding-top: 30px;
+  }
+  .main-container-wrapper {
+    display: block; /* フレックスボックスを使用 */
+    justify-content: center;
+    align-items: center; /* 上部に揃える */
+    width: 100%;
+  }
+  .Board {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+  }
+  .ExplanationPanel {
+    .ExplanationPanel-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3px 5px;
+    }
+    .subtitle {
+      font-size: 8px;
+      width: 20%;
+    }
+    .keyguide {
+      width: 75%;
+      display: flex;
+      justify-content: center;
+      margin: auto;
+      /* padding: 5px 5px; */
+    }
+    .keyguide-block {
+      width: 20%;
+    }
+    .keyguide-key {
+      font-size: 8px;
+      text-align: center;
+    }
+
+    .keyguide-text {
+      font-size: 8px;
+      text-align: center;
+      margin-bottom: 0px;
+    }
+  }
+  .Tile {
+    width: 15px; /* スマホではサイズを大きく */
+    height: 15px; /* スマホではサイズを大きく */
+  }
+  .TileLine {
+    width: 300px;
+  }
+}
+
+/* iPad向けのスタイル */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .Board {
+    display: flex;
+    justify-content: left;
+    margin-top: 30px;
+  }
+  .ExplanationPanel {
+    margin-right: 40px;
+    padding: 10px 3px;
+
+    .keyguide {
+      font-size: 15px;
+      width: 80px;
+      margin: auto;
+      padding: 10px 20px;
+    }
+
+    .keyguide-key {
+      font-size: 20px;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .keyguide-text {
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  }
+  .Tile {
+    width: 25px; /* iPadではサイズを調整 */
+    height: 25px; /* iPadではサイズを調整 */
+  }
+  .TileLine {
+    width: 300px;
+  }
+}
+
+/* PC向けのスタイル */
+@media (min-width: 1025px) {
+  .Board {
+    display: flex;
+    justify-content: left;
+    margin-top: 50px;
+  }
+  .ExplanationPanel {
+    margin-right: 20px;
+    padding: 10px 15px;
+
+    .keyguide {
+      font-size: 15px;
+      width: 100px;
+      /* display: flex; */
+      justify-content: center; /* 中央寄せ */
+      margin: auto;
+      padding: 10px 3px;
+    }
+    .keyguide-key {
+      font-size: 20px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .keyguide-text {
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  }
+  .Tile {
+    width: 30px; /* PCではデフォルトのサイズに戻す */
+    height: 30px; /* PCではデフォルトのサイズに戻す */
+  }
+  .TileLine {
+    width: 400px;
+  }
 }
