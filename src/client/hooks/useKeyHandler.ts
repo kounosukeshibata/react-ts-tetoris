@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { MoveType } from "../components/blocks";
+import { type MoveType } from "../components/blocks";
 
 const useKeyHandler = (
   nextStep: () => void,
@@ -21,8 +21,6 @@ const useKeyHandler = (
 
   // キーボード操作のたびにブロック移動を実行する副作用
   useEffect(() => {
-    // const intervalId = setInterval(nextStep, 1000);
-    // window.addEventListener("keydown", nextStep);
     const keyEventHandler = (e: KeyboardEvent) => {
       e.preventDefault();
       switch (e.key) {

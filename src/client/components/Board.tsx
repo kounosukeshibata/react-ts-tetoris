@@ -5,6 +5,8 @@ import Tile from "./Tile";
 import "../App.css";
 import useKeyHandler from "../hooks/useKeyHandler";
 import useTimer from "../hooks/useTimer";
+import ControlPanel from "./ControlPanel";
+import { useState, useEffect } from "react";
 
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
@@ -14,6 +16,19 @@ function Board() {
     BOARD_WIDTH,
     BOARD_HEIGHT,
   );
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 画面サイズのチェック
+  const updateMedia = () => {
+    setIsMobile(window.innerWidth < 600);
+  };
+
+  useEffect(() => {
+    updateMedia(); // 初期値を設定
+    window.addEventListener("resize", updateMedia); // リサイズイベントリスナーを追加
+    return () => window.removeEventListener("resize", updateMedia); // クリーンアップ
+  }, []);
 
   useTimer(nextStep);
 
@@ -45,9 +60,12 @@ function Board() {
   useKeyHandler(nextStep, move, fall);
 
   return (
-    <div className="Board">
-      {isGameOvered ? <GameOver /> : null}
-      <div className="lines-container">{lines}</div>
+    <div>
+      <div className="Board">
+        {isGameOvered ? <GameOver /> : null}
+        <div className="lines-container">{lines}</div>
+      </div>
+      {isMobile && <ControlPanel move={move} fall={fall} />}
     </div>
   );
 }

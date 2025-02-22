@@ -90,6 +90,16 @@
     display: flex;
     justify-content: center;
   }
+  .controlpanels {
+    margin: 10px auto;
+    width: 300px;
+
+    * {
+      margin: 0 8px;
+      width: 30px;
+      height: 30px;
+    }
+  }
   .ExplanationPanel {
     .ExplanationPanel-wrapper {
       display: flex;
