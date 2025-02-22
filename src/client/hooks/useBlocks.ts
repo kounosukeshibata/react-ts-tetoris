@@ -45,11 +45,38 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
     );
   };
 
+  // 最下層までブロックを落とす
+  const fall = () => {
+    if (fallingBlock === null) {
+      return;
+    }
+
+    // 最下層に到達するまで繰り返し更新する
+    let currentBlock = { ...fallingBlock };
+
+    for (let i = 0; i < boardHeight; i++) {
+      const movedBlock = getNextBlock(
+        currentBlock,
+        boardWidth,
+        boardHeight,
+        tiles,
+      );
+
+      if (!movedBlock) {
+        break;
+      }
+
+      currentBlock = movedBlock;
+    }
+    setFallingBlock(currentBlock);
+  };
+
   return {
     tiles,
     fallingBlock,
     nextStep,
     move,
+    fall,
   };
 };
 

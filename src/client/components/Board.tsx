@@ -9,7 +9,7 @@ const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 
 function Board() {
-  const { tiles, fallingBlock, nextStep, move } = useBlocks(
+  const { tiles, fallingBlock, nextStep, move, fall } = useBlocks(
     BOARD_WIDTH,
     BOARD_HEIGHT,
   );
@@ -41,7 +41,7 @@ function Board() {
     </div>
   ));
 
-  useKeyHandler(nextStep, move);
+  useKeyHandler(nextStep, move, fall);
 
   return (
     <div className="Board">
