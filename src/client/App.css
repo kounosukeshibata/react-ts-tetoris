@@ -85,10 +85,19 @@
     align-items: center; /* 上部に揃える */
     width: 100%;
   }
+  .Board-wrapper {
+    margin: 0 auto;
+  }
   .Board {
     margin-top: 15px;
-    display: flex;
-    justify-content: center;
+  }
+  .lines-container {
+    margin-top: 15px;
+  }
+  .score-board {
+    .score-count {
+      font-size: 10px;
+    }
   }
   .controlpanels {
     margin: 10px auto;
@@ -101,6 +110,9 @@
     }
   }
   .ExplanationPanel {
+    margin-left: 15px;
+    margin-right: 15px;
+
     .ExplanationPanel-wrapper {
       display: flex;
       justify-content: center;
@@ -116,7 +128,6 @@
       display: flex;
       justify-content: center;
       margin: auto;
-      /* padding: 5px 5px; */
     }
     .keyguide-block {
       width: 20%;
@@ -137,19 +148,40 @@
     height: 15px; /* スマホではサイズを大きく */
   }
   .TileLine {
-    width: 300px;
+    width: 240px;
+    margin: 0 auto;
   }
 }
 
 /* iPad向けのスタイル */
 @media (min-width: 601px) and (max-width: 1024px) {
+  .Board-wrapper {
+    margin: 0 5%;
+  }
   .Board {
-    display: flex;
-    justify-content: left;
-    margin-top: 30px;
+    margin-top: 10px;
+  }
+  .lines-container {
+    margin-top: 15px;
+  }
+  .score-board {
+    .score-count {
+      /* margin: 0 auto; */
+      font-size: 30px;
+    }
+  }
+  .controlpanels {
+    margin: 10px auto;
+    width: 400px;
+
+    * {
+      margin: 0 8px;
+      width: 50px;
+      height: 50px;
+    }
   }
   .ExplanationPanel {
-    margin-right: 40px;
+    margin-right: 0px;
     padding: 10px 3px;
 
     .keyguide {
@@ -177,15 +209,29 @@
   }
   .TileLine {
     width: 300px;
+    margin: 0 auto;
   }
 }
 
 /* PC向けのスタイル */
 @media (min-width: 1025px) {
+  .main-container-wrapper {
+    display: flex; /* フレックスボックスを使用 */
+    justify-content: center;
+    align-items: center; /* 上部に揃える */
+    width: 100%;
+  }
+  .Board-wrapper {
+    margin: 0 5%;
+  }
   .Board {
-    display: flex;
-    justify-content: left;
-    margin-top: 50px;
+    margin-top: 20px;
+  }
+  .score-board {
+    .score-count {
+      margin-bottom: 20px;
+      font-size: 30px;
+    }
   }
   .ExplanationPanel {
     margin-right: 20px;
@@ -194,7 +240,6 @@
     .keyguide {
       font-size: 15px;
       width: 100px;
-      /* display: flex; */
       justify-content: center; /* 中央寄せ */
       margin: auto;
       padding: 10px 3px;
@@ -217,11 +262,11 @@
   }
   .TileLine {
     width: 400px;
+    margin: 0 auto;
   }
 }
 
 .GameOver {
-  display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
@@ -229,6 +274,11 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
 
+  .score-gameover {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    font-size: 25px;
+  }
   .title-text {
     font-size: 40px;
     font-weight: bold;

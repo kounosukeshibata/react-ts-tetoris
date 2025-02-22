@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-function GameOver() {
+function GameOver({ score }: { score: number }) {
   const text = useMemo(
     () =>
       ["GAME", "OVER"]
@@ -20,6 +20,7 @@ function GameOver() {
   console.log("ゲームオーバー");
   return (
     <div className="GameOver">
+      <div className="score-gameover">score：{score}</div>
       <div className="title-text">{text}</div>
     </div>
   );

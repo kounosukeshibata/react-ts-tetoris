@@ -7,21 +7,20 @@ import useKeyHandler from "../hooks/useKeyHandler";
 import useTimer from "../hooks/useTimer";
 import ControlPanel from "./ControlPanel";
 import { useState, useEffect } from "react";
+import Score from "./Score";
 
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 
 function Board() {
-  const { tiles, fallingBlock, isGameOvered, nextStep, move, fall } = useBlocks(
-    BOARD_WIDTH,
-    BOARD_HEIGHT,
-  );
+  const { tiles, fallingBlock, isGameOvered, nextStep, move, fall, score } =
+    useBlocks(BOARD_WIDTH, BOARD_HEIGHT);
 
   const [isMobile, setIsMobile] = useState(false);
 
   // 画面サイズのチェック
   const updateMedia = () => {
-    setIsMobile(window.innerWidth < 600);
+    setIsMobile(window.innerWidth <= 1024);
   };
 
   useEffect(() => {
@@ -60,9 +59,10 @@ function Board() {
   useKeyHandler(nextStep, move, fall);
 
   return (
-    <div>
+    <div className="Board-wrapper">
       <div className="Board">
-        {isGameOvered ? <GameOver /> : null}
+        {isGameOvered ? <GameOver score={score} /> : null}
+        <Score score={score} />
         <div className="lines-container">{lines}</div>
       </div>
       {isMobile && <ControlPanel nextStep={nextStep} move={move} fall={fall} />}

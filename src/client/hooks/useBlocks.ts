@@ -14,6 +14,7 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [fallingBlock, setFallingBlock] = useState<Block | null>(null);
   const [isGameOvered, setIsGameOvered] = useState(false);
+  const [score, setScore] = useState(0);
 
   // 各ステップでブロックが動いた直後の新しいブロックの状態をsetする
   const nextStep = () => {
@@ -29,8 +30,10 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
       let nextTiles = [...tiles, ...getTiles(fallingBlock)];
       // 行が全て揃った場合に行削除を行いtilesステートをsetする
       const completedRows = getCompletedRows(nextTiles, boardWidth);
+      const calcScore = completedRows.length + score;
       if (completedRows.length) {
         nextTiles = deleteRows(nextTiles, completedRows);
+        setScore(calcScore);
       }
       setTiles(nextTiles);
     }
@@ -85,6 +88,7 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
     nextStep,
     move,
     fall,
+    score,
   };
 };
 
