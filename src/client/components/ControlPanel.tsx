@@ -1,25 +1,59 @@
-import { getNextBlock, type MoveType } from "../components/blocks";
-import useKeyHandler from "../hooks/useKeyHandler";
+import { type MoveType } from "../components/blocks";
+import { useState } from "react";
 
 type ControlPanelProps = {
+  nextStep: () => void;
   move: (m: MoveType) => void; // move関数の型を指定
   fall: () => void; // fall関数の型を指定
 };
 
-const ControlPanel: React.FC<ControlPanelProps> = ({ move, fall }) => {
+const ControlPanel: React.FC<ControlPanelProps> = ({
+  nextStep,
+  move,
+  fall,
+}) => {
+  const [lastTap, setLastTap] = useState(0);
+
+  const handleTouchEnd = (action: () => void) => {
+    const currentTime = Date.now();
+    const tapDelay = 500;
+    if (currentTime - lastTap < tapDelay) {
+      return;
+    }
+    setLastTap(currentTime);
+    action();
+  };
+
   return (
     <div className="controlpanels">
-      <button className="arrow-left" onClick={() => move("left")}>
+      <button
+        className="arrow-left"
+        onTouchEnd={() => handleTouchEnd(() => move("left"))}
+      >
         ←
       </button>
-      <button className="arrow-up" onClick={() => move("turn")}>
+      <button
+        className="arrow-up"
+        onTouchEnd={() => handleTouchEnd(() => move("turn"))}
+      >
         ↑
       </button>
-      <button className="arrow-down">↓</button>
-      <button className="arrow-right" onClick={() => move("right")}>
+      <button
+        className="arrow-down"
+        onTouchEnd={() => handleTouchEnd(() => nextStep())}
+      >
+        ↓
+      </button>
+      <button
+        className="arrow-right"
+        onTouchEnd={() => handleTouchEnd(() => move("right"))}
+      >
         →
       </button>
-      <button className="arrow-down" onClick={() => fall()}>
+      <button
+        className="fall-down"
+        onTouchEnd={() => handleTouchEnd(() => fall())}
+      >
         _
       </button>
     </div>

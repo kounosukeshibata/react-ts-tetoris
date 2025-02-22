@@ -65,7 +65,7 @@ function Board() {
         {isGameOvered ? <GameOver /> : null}
         <div className="lines-container">{lines}</div>
       </div>
-      {isMobile && <ControlPanel move={move} fall={fall} />}
+      {isMobile && <ControlPanel nextStep={nextStep} move={move} fall={fall} />}
     </div>
   );
 }

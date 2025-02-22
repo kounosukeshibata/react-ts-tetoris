@@ -35,7 +35,6 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
       setTiles(nextTiles);
     }
 
-    console.log(boardHeight);
     const maxY = tiles.length > 0 ? Math.min(...tiles.map(({ y }) => y)) : 20;
     if (movedBlock !== null && maxY <= 0) {
       setIsGameOvered(true);
