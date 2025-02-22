@@ -1,3 +1,4 @@
+import GameOver from "./GameOver";
 import useBlocks from "../hooks/useBlocks";
 import { COLOR_NAME, getTiles } from "./blocks";
 import Tile from "./Tile";
@@ -9,7 +10,7 @@ const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;
 
 function Board() {
-  const { tiles, fallingBlock, nextStep, move, fall } = useBlocks(
+  const { tiles, fallingBlock, isGameOvered, nextStep, move, fall } = useBlocks(
     BOARD_WIDTH,
     BOARD_HEIGHT,
   );
@@ -45,6 +46,7 @@ function Board() {
 
   return (
     <div className="Board">
+      {isGameOvered ? <GameOver /> : null}
       <div className="lines-container">{lines}</div>
     </div>
   );

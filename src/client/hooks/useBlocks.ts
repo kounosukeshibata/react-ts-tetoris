@@ -13,6 +13,7 @@ import {
 const useBlocks = (boardWidth: number, boardHeight: number) => {
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [fallingBlock, setFallingBlock] = useState<Block | null>(null);
+  const [isGameOvered, setIsGameOvered] = useState(false);
 
   // 各ステップでブロックが動いた直後の新しいブロックの状態をsetする
   const nextStep = () => {
@@ -33,6 +34,13 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
       }
       setTiles(nextTiles);
     }
+
+    console.log(boardHeight);
+    const maxY = tiles.length > 0 ? Math.min(...tiles.map(({ y }) => y)) : 20;
+    if (movedBlock !== null && maxY <= 0) {
+      setIsGameOvered(true);
+    }
+
     setFallingBlock(movedBlock);
   };
 
@@ -74,6 +82,7 @@ const useBlocks = (boardWidth: number, boardHeight: number) => {
   return {
     tiles,
     fallingBlock,
+    isGameOvered,
     nextStep,
     move,
     fall,
