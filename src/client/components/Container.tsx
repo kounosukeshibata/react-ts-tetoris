@@ -1,5 +1,5 @@
-import Board from "./Board";
-import ExplanationPanel from "./ExplanationPanel";
+import Board from "./Board.js";
+import ExplanationPanel from "./ExplanationPanel.js";
 
 const Container = () => {
   return (

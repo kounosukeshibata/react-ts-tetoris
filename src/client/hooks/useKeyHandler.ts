@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { type MoveType } from "../components/blocks";
+import { type MoveType } from "../components/blocks/index.js";
 
 const useKeyHandler = (
   nextStep: () => void,

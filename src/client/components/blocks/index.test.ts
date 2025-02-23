@@ -1,4 +1,4 @@
-import * as block from "./index";
+import * as block from "./index.js";
 
 test("turnOnce", () => {
   const dataSet: [number, number, number, number, number, number][] = [

@@ -8,7 +8,7 @@ import {
   deleteRows,
   Tile,
   getTiles,
-} from "../components/blocks";
+} from "../components/blocks/index.js";
 
 const useBlocks = (boardWidth: number, boardHeight: number) => {
   const [tiles, setTiles] = useState<Tile[]>([]);

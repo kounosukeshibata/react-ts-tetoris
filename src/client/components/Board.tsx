@@ -1,13 +1,13 @@
-import GameOver from "./GameOver";
-import useBlocks from "../hooks/useBlocks";
-import { COLOR_NAME, getTiles } from "./blocks";
-import Tile from "./Tile";
+import GameOver from "./GameOver.js";
+import useBlocks from "../hooks/useBlocks.js";
+import { COLOR_NAME, getTiles } from "./blocks/index.js";
+import Tile from "./Tile.js";
 import "../App.css";
-import useKeyHandler from "../hooks/useKeyHandler";
-import useTimer from "../hooks/useTimer";
-import ControlPanel from "./ControlPanel";
+import useKeyHandler from "../hooks/useKeyHandler.js";
+import useTimer from "../hooks/useTimer.js";
+import ControlPanel from "./ControlPanel.js";
 import { useState, useEffect } from "react";
-import Score from "./Score";
+import Score from "./Score.js";
 
 const BOARD_WIDTH = 10;
 const BOARD_HEIGHT = 20;

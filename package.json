@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -w src/server -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx src/server/main.ts",
-    "build": "vite build",
+    "build": "tsc -b && vite build",
     "test": "jest"
   },
   "dependencies": {

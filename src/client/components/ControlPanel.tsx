@@ -1,4 +1,4 @@
-import { type MoveType } from "../components/blocks";
+import { type MoveType } from "../components/blocks/index.js";
 import { useState } from "react";
 
 type ControlPanelProps = {
