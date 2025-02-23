@@ -1,4 +1,5 @@
 import * as block from "./index.js";
+import { test, expect } from "@jest/globals";
 
 test("turnOnce", () => {
   const dataSet: [number, number, number, number, number, number][] = [
